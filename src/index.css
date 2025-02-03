@@ -4,14 +4,14 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #030014;
+  --color-primary: #140000;
 
   --color-light-100: #ff8b8b;
   --color-light-200: #ffc7c7;
 
   --color-gray-100: #9ca4ab;
 
-  --color-dark-100: #0f0d23;
+  --color-dark-100: #230d0d;
 
   --font-dm-sans: DM Sans, sans-serif;
 
@@ -24,7 +24,7 @@
   body {
     font-family: "DM Sans", serif;
     font-optical-sizing: auto;
-    background: #030014;
+    background: #140000;
   }
 
   h1 {
@@ -78,7 +78,7 @@
   }
  
   .search {
-    @apply w-full bg-light-100/10 px-4 py-3 rounded-lg mt-10 max-w-3xl mx-auto;
+    @apply w-full bg-light-100/10 px-4 py-3 rounded-lg mt-10 max-w-3xl mx-auto border-[1px] border-white/10;
 
     & div {
       @apply relative flex items-center;
@@ -102,10 +102,10 @@
   }
 
   .movie-card {
-    @apply bg-dark-100 p-5 rounded-2xl shadow-inner shadow-light-100/10 cursor-pointer;
+    @apply bg-dark-100 p-5 rounded-2xl shadow-inner shadow-light-100/10 rotate-6 cursor-pointer;
 
     & img {
-      @apply rounded-lg h-auto w-full;
+      @apply rounded-lg scale-90 w-full;
     }
 
     & h3 {
@@ -140,6 +140,14 @@
       @apply text-gray-100 font-medium text-base;
     }
   }
+
+  .poster {
+    @apply grid grid-cols-4 lg:gap-5 p-3 lg:p-5 rounded-2xl shadow-inner shadow-light-100/10;
+
+    & img {
+      @apply w-full;
+    }
+  }
 }
 
 @utility text-gradient {
@@ -147,7 +155,7 @@
 }
 
 @utility fancy-text {
-  -webkit-text-stroke: 5px rgba(206, 206, 251, 0.5);
+  -webkit-text-stroke: 5px rgba(251, 206, 206, 0.5);
   font-size: 190px;
   font-family: "Bebas Neue", sans-serif;
 }

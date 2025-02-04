@@ -1,3 +1,4 @@
+import moment from "moment";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router"
 
@@ -15,12 +16,13 @@ const Movie = () => {
   const { movieId } = useParams()
 
   const [isLoading, setIsLoading] = useState(false)
-  const [errorMessage, setErrorMessage] = useState("")
+  // const [errorMessage, setErrorMessage] = useState("")
   const [movie, setMovie] = useState({})
 
+  // fetch movie 
   const fetchMovie = async () => {
     setIsLoading(true)
-    setErrorMessage('')
+    // setErrorMessage('')
     try {
       const endpoint = `${API_BASE_URL}/movie/${movieId}`
 
@@ -33,18 +35,18 @@ const Movie = () => {
       const data = await res.json()
 
       if(data.Response === 'false') {
-        setErrorMessage(data.Error || "Error fetching movies")
-        return;
+        // setErrorMessage(data.Error || "Error fetching movies")
+        return data.Error || "Error fetching movies";
       }
 
       if(data) {
         setMovie(data)
       }
-      // console.log(movie.genres)
+      // console.log(movie)
 
     } catch (error) {
       console.log(error)
-      setErrorMessage(error)
+      // setErrorMessage(error)
     } finally {
       setIsLoading(false)
     }
@@ -53,6 +55,42 @@ const Movie = () => {
   useEffect(() => {
     fetchMovie()
   }, [isLoading])
+
+  // calculate figures 
+  const calculateFig = (fig) => {
+    const figLen = fig?.toString().length
+
+    if(figLen < 7){
+      return fig.toString()
+    }
+
+    if(figLen == 7 ){
+      return fig.toString().slice(0,1) + " million"
+    }
+
+    if(figLen == 8 ){
+      return fig.toString().slice(0,2) + " million"
+    }
+
+    if(figLen == 9 ){
+      return fig.toString().slice(0,3) + " million"
+    }
+
+    if(figLen == 10 ){
+      return fig.toString().slice(0,1) + " billion"
+    }
+
+    if(figLen == 11 ){
+      return fig.toString().slice(0,2) + " billion"
+    }
+  }
+
+  // manipulate date 
+  const maniputeDate = (date) => {
+    const newDate = new Date(date)
+
+    return moment(newDate).format("MMMM Do, YYYY")
+  }
 
   if(isLoading) {
     return (
@@ -80,7 +118,7 @@ const Movie = () => {
           </div>
         </div>
 
-        <table className="border-separate border-spacing-4">
+        <table className="auto border-separate border-spacing-4">
           <tr>
             <td className="h-full flex items-start text-lg text-gray-100">Genre</td>
             <td className="f;extext-[16px]">
@@ -97,23 +135,37 @@ const Movie = () => {
           </tr>
           <tr>
             <td className="h-full flex items-start text-lg text-gray-100">Release Date</td>
-            <td className="text-[16px] font-semibold">December, 20th</td>
+            <td className="text-[16px] font-semibold">{maniputeDate(movie.release_date)}</td>
           </tr>
           <tr>
             <td className="h-full flex items-start text-lg text-gray-100">Countries</td>
-            <td className="text-[16px] font-semibold">Map countries</td>
+            <td className="text-[16px] font-semibold">
+              {movie.production_countries?.length > 0 && movie.production_countries.map((country, index) => (
+                <>
+                  <span key={index}>{country.name}</span>
+                  {index < movie.production_countries?.length - 1 && <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>}
+                </>
+              ))}
+            </td>
           </tr>
           <tr>
             <td className="h-full flex items-start text-lg text-gray-100">Language</td>
-            <td className="text-[16px] font-semibold">Map languages</td>
+            <td className="text-[16px] font-semibold">
+              {movie.spoken_languages?.length > 0 && movie.spoken_languages.map((language, index) => (
+                <>
+                  <span key={index}>{language.english_name}</span>
+                  {index < movie.spoken_languages?.length - 1 && <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>}
+                </>
+              ))}
+            </td>
           </tr>
           <tr>
             <td className="h-full flex items-start text-lg text-gray-100">Budget</td>
-            <td className="text-[16px] font-semibold">$14million </td>
+            <td className="text-[16px] font-semibold">{movie.budget !== 0 ? "$" + calculateFig(movie.budget) : "N/A"} </td>
           </tr>
           <tr>
             <td className="h-full flex items-start text-lg text-gray-100">Revenue</td>
-            <td className="text-[16px] font-semibold">$900 million</td>
+            <td className="text-[16px] font-semibold">{movie.revenue !== 0 ? "$" + calculateFig(movie.revenue) : "N/A"}</td>
           </tr>
           <tr>
             <td className="h-full flex items-start text-lg text-gray-100">Production Company</td>
@@ -121,14 +173,14 @@ const Movie = () => {
               {movie.production_companies?.length > 0 && movie.production_companies.map((company, index) => (
                 <>
                   <span key={company.id}>{company.name}</span>
-                  {index < movie.production_companies[movie.production_companies.length - 1] && <span>   •  </span>}
+                  {index < movie.production_companies?.length - 1 && <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>}
                 </>
               ))}
             </td>
           </tr>
           <tr>
             <td className="h-full flex items-start text-lg text-gray-100">Status</td>
-            <td className="text-[16px] font-semibold">Released</td>
+            <td className="text-[16px] font-semibold">{movie.status}</td>
           </tr>
         </table>
       </div>

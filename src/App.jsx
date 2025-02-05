@@ -85,6 +85,8 @@ const App = () => {
     fetchMovies(debouncedSearchTerm)
   }, [debouncedSearchTerm])
 
+  console.log(trending)
+
   return (
     <main>
       <div className="pattern"/>

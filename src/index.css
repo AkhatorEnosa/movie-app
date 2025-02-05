@@ -61,19 +61,31 @@
     @apply mt-20;
 
     & ul {
-      @apply flex flex-row overflow-y-auto gap-5 -mt-10 w-full hide-scrollbar;
+      @apply flex flex-row overflow-y-auto gap-6 w-full hide-scrollbar mt-10;
     }
 
     & ul li {
-      @apply min-w-[230px] flex flex-row items-center;
+      @apply flex flex-col w-[150px] h-fit justify-start bg-white/20 px-2 py-2 rounded-2xl shadow-inner shadow-light-100/20 gap-4;
+    }
+
+    & ul li .link{
+      @apply flex flex-col text-center justify-center gap-4;
     }
 
     & ul li p {
-      @apply fancy-text mt-[22px] text-nowrap;
+      @apply text-white text-sm line-clamp-1
     }
 
+    /* & ul li .items {
+      @apply w-fit min-w-[230px] flex flex-row gap-2 items-center;
+    } */
+
+    /* & ul li p.num {
+      @apply h-full fancy-text text-nowrap;
+    } */
+
     & ul li img {
-      @apply w-[127px] h-[163px] rounded-lg object-cover -ml-3.5;
+      @apply w-full h-[163px] rounded-lg object-cover ;
     }
   }
  
@@ -102,7 +114,7 @@
   }
 
   .movie-card {
-    @apply bg-dark-100 p-5 rounded-2xl shadow-inner shadow-light-100/10 rotate-6 cursor-pointer;
+    @apply bg-dark-100 p-5 rounded-2xl shadow-inner shadow-light-100/10 cursor-pointer;
 
     & img {
       @apply rounded-lg scale-90 w-full;
@@ -156,7 +168,7 @@
 
 @utility fancy-text {
   -webkit-text-stroke: 5px rgba(251, 206, 206, 0.5);
-  font-size: 190px;
+  font-size: 90px;
   font-family: "Bebas Neue", sans-serif;
 }
 

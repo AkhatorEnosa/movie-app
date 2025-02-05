@@ -1,15 +1,14 @@
 /* eslint-disable react/prop-types */
 
-const TrendingMovieCard = ({ movie, index}) => {
+import { Link } from "react-router"
+
+const TrendingMovieCard = ({ movie: { movie_id, title, poster_url}}) => {
   return (
-    <li className="cursor-pointer">
-        <p>{index + 1}</p>
-        <div className="relative">
-        <div className="absolute bg-black/50 w-full h-full -ml-3.5 rounded-lg">
-            <p>{movie.title}</p>
-        </div>
-        <img src={movie.poster_url} alt={movie.title} />
-        </div>
+    <li className="group cursor-pointer">
+      <Link to={`/${movie_id}`} className="link">
+        <img src={poster_url} alt="Movie Poster" />
+        <p className="group-hover:line-clamp-none">{title}</p>
+      </Link>
     </li>
   )
 }

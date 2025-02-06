@@ -60,12 +60,16 @@
   .trending {
     @apply mt-20;
 
+    & div {
+       @apply flex flex-row gap-6 w-full py-10 overflow-scroll hide-scrollbar mt-10;
+    }
+
     & ul {
-      @apply flex flex-row overflow-y-auto gap-6 w-full hide-scrollbar mt-10;
+      @apply flex flex-row gap-6 w-fit;
     }
 
     & ul li {
-      @apply flex flex-col w-[150px] h-fit justify-start bg-white/20 px-2 py-2 rounded-2xl shadow-inner shadow-light-100/20 gap-4;
+      @apply flex flex-col w-[200px] md:w-[150px] h-fit justify-start bg-white/20 px-2 py-2 rounded-2xl shadow-inner shadow-light-100/20 gap-4;
     }
 
     & ul li .link{
@@ -117,7 +121,7 @@
     @apply bg-dark-100 p-5 rounded-2xl shadow-inner shadow-light-100/10 cursor-pointer;
 
     & img {
-      @apply rounded-lg scale-90 w-full;
+      @apply rounded-lg lg:scale-90 w-full;
     }
 
     & h3 {

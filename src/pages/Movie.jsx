@@ -1,7 +1,9 @@
 import moment from "moment";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router"
 import Navbar from "../components/Navbar";
+import BackBtn from "../components/BackBtn";
+import Spinner from "../components/Spinner";
 
 const API_BASE_URL = 'https://api.themoviedb.org/3';
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -17,13 +19,11 @@ const Movie = () => {
   const { movieId } = useParams()
 
   const [isLoading, setIsLoading] = useState(false)
-  // const [errorMessage, setErrorMessage] = useState("")
   const [movie, setMovie] = useState({})
 
   // fetch movie 
   const fetchMovie = async () => {
     setIsLoading(true)
-    // setErrorMessage('')
     try {
       const endpoint = `${API_BASE_URL}/movie/${movieId}`
 
@@ -36,18 +36,17 @@ const Movie = () => {
       const data = await res.json()
 
       if(data.Response === 'false') {
-        // setErrorMessage(data.Error || "Error fetching movies")
         return data.Error || "Error fetching movies";
       }
 
       if(data) {
         setMovie(data)
       }
-      // console.log(movie)
+
+      return data
 
     } catch (error) {
       console.log(error)
-      // setErrorMessage(error)
     } finally {
       setIsLoading(false)
     }
@@ -55,7 +54,7 @@ const Movie = () => {
 
   useEffect(() => {
     fetchMovie()
-  }, [isLoading])
+  }, [fetchMovie.title])
 
   // calculate figures 
   const calculateFig = (fig) => {
@@ -95,9 +94,14 @@ const Movie = () => {
 
   //Display runtime
   const displayRuntime = (runtime) => {
+
     const convertToTime = (runtime/60).toFixed(2);
     const splitResult = convertToTime.split('.')
-    const result = splitResult[0] == 0 ? runtime + " min" : convertToTime.split('.').map((x, index) => index == 0 ? x + "hr" : x + "min").join(" ");
+    const getHour = splitResult[0];
+    const getMin = Number("0." + splitResult[1] * 60).toFixed(2).slice(2);
+    
+    // const result = getHour == 0 ? runtime + " min" : convertToTime.split('.').map((x, index) => index == 0 ? x + "hr" : x + "min").join(" ");
+    const result = getHour == 0 ? runtime + " min" : `${getHour}hr ${getMin}min`;
 
     
     return result
@@ -109,12 +113,11 @@ const Movie = () => {
 
       <div className="flex flex-col">
         {isLoading ? 
-          <div className="w-full h-[70vh] flex justify-center items-center text-white">
-            <p>Loading ...</p>
-          </div> : 
+          <Spinner /> : 
           <>
-            <div className="flex w-full justify-between items-center mb-5 backdrop-blur-sm sticky top-0 z-50 bg-black/50 py-5">
-              <div className="flex flex-col gap-4">
+            <BackBtn />
+            <div className="flex flex-col md:flex-row w-full gap-2 md:justify-between md:items-center mb-5 backdrop-blur-sm sticky top-0 z-50 bg-black/50 py-5">
+              <div className="flex flex-col gap-2 lg:gap-4">
                 <h2>{movie.original_title}</h2>
                 <div className="flex gap-2 font-thin">
                   <p className="year">{movie.release_date?.split("-")[0]}</p>
@@ -124,13 +127,13 @@ const Movie = () => {
                 </div>
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex gap-2 text-sm lg:text-base">
                 <div className="flex gap-2 rounded-full px-4 py-1 bg-[#3e0000] h-fit">
                   <img src="/star.svg" alt="" />
                   <p><b>{movie.vote_average ? movie.vote_average.toFixed(1) : "N/A"}</b>/10</p>
                 </div>
 
-                <a href={movie.homepage} target="_blank" className="rounded-lg px-4 py-1 bg-[#910000] hover:bg-[#ff0404] h-fit transition-all duration-150">Visit Official Website &rarr;</a>
+                {movie.homepage !== "" ? <a href={movie.homepage} target="_blank" className="rounded-lg px-4 py-1 bg-[#910000] hover:bg-[#ff0404] h-fit transition-all duration-150">Visit Official Website &rarr;</a> : <span className="rounded-lg px-4 py-1 bg-[#910000] hover:bg-[#ff0404] h-fit transition-all duration-150 cursor-not-allowed">No Official Website </span>}
               </div>
             </div>
 
@@ -164,10 +167,10 @@ const Movie = () => {
                 <td className="h-full flex items-start text-lg text-gray-100">Countries</td>
                 <td className="text-[16px] font-semibold">
                   {movie.production_countries?.length > 0 && movie.production_countries.map((country, index) => (
-                    <>
-                      <span key={index}>{country.name}</span>
+                    <React.Fragment key={index}>
+                      <span>{country.name}</span>
                       {index < movie.production_countries?.length - 1 && <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>}
-                    </>
+                    </React.Fragment>
                   ))}
                 </td>
               </tr>
@@ -175,10 +178,10 @@ const Movie = () => {
                 <td className="h-full flex items-start text-lg text-gray-100">Language</td>
                 <td className="text-[16px] font-semibold">
                   {movie.spoken_languages?.length > 0 && movie.spoken_languages.map((language, index) => (
-                    <>
-                      <span key={index}>{language.english_name}</span>
+                    <React.Fragment key={index}>
+                      <span>{language.english_name}</span>
                       {index < movie.spoken_languages?.length - 1 && <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>}
-                    </>
+                    </React.Fragment>
                   ))}
                 </td>
               </tr>
@@ -194,10 +197,10 @@ const Movie = () => {
                 <td className="h-full flex items-start text-lg text-gray-100">Production Company</td>
                 <td className="text-[16px] font-semibold">
                   {movie.production_companies?.length > 0 && movie.production_companies.map((company, index) => (
-                    <>
-                      <span key={company.id}>{company.name}</span>
+                    <React.Fragment key={index}>
+                      <span>{company.name}</span>
                       {index < movie.production_companies?.length - 1 && <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>}
-                    </>
+                    </React.Fragment>
                   ))}
                 </td>
               </tr>
@@ -214,7 +217,3 @@ const Movie = () => {
 }
 
 export default Movie
-            {/* <div className="bg-white/40 hover:bg-white/60 rounded-full absolute flex gap-2 font-thin px-4 py-2 bottom-3 left-3 cursor-pointer backdrop-blur-lg transition-all duration-150">
-              <img src="/play.png" alt="Play Trailer" className=""/>
-              <p>Trailer</p>
-            </div> */}

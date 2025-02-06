@@ -23,12 +23,13 @@ const App = () => {
   const [movies, setMovies] = useState([])
   const [trending, setTrending] = useState([])
   const [isLoading, setIsLoading] = useState(false)
+  const [isLoadingTrend, setIsLoadingTrend] = useState(false)
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("")
 
   // This hook debounces the searchTerm from making a request to the api on every change. Debouncing stalls the request until searchTerm does not change for a number of time 
   useDebounce(() => {
-    setDebouncedSearchTerm(searchTerm)
-  }, 500, [searchTerm]
+      setDebouncedSearchTerm(searchTerm)
+    }, 500, [searchTerm]
   )
 
   const fetchMovies = async (query = "") => {
@@ -69,11 +70,16 @@ const App = () => {
 
   const loadTrendingMovies = async () => {
     try {
+      setIsLoadingTrend(true);
       const movies = await getTrendingMovies()
 
       setTrending(movies)
+      setIsLoadingTrend(false)
     } catch (error) {
       console.log(`Error fetching trending movies: ${error}`)
+      setIsLoadingTrend(false)
+    } finally{
+      setIsLoadingTrend(false)
     }
   }
 
@@ -85,7 +91,7 @@ const App = () => {
     fetchMovies(debouncedSearchTerm)
   }, [debouncedSearchTerm])
 
-  console.log(trending)
+  // console.log(trending)
 
   return (
     <main>
@@ -104,15 +110,18 @@ const App = () => {
           <section className="trending">
             <h2>What people are watching</h2>
 
-            <ul>
-              {trending.map((movie, index) => (
-                <TrendingMovieCard 
-                  key={movie.$id}
-                  movie={movie}
-                  index={index}
-                />
-              ))}
-            </ul>
+            {isLoadingTrend ? <Spinner /> :
+              <div>
+                <ul>
+                  {trending.map((movie, index) => (
+                    <TrendingMovieCard 
+                      key={movie.$id}
+                      movie={movie}
+                      index={index}
+                    />
+                  ))}
+                </ul>
+              </div>}
           </section>
         )}
 

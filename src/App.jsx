@@ -109,7 +109,7 @@ const App = () => {
 
         {trending.length > 0 && (
           <section className="trending">
-            <h2>What people are watching</h2>
+            <h2>What people are searching for</h2>
 
             {isLoadingTrend ? <Spinner /> :
               <div>
@@ -126,7 +126,7 @@ const App = () => {
           </section>
         )}
 
-        <section className="all-movies mt-10">
+        <section className="all-movies mt-28">
           <h2>All Movies</h2>
 
           {

@@ -58,10 +58,10 @@
   }
 
   .trending {
-    @apply mt-20;
+    @apply mt-20 text-center;
 
     & div {
-       @apply flex flex-row gap-6 w-full py-10 overflow-scroll hide-scrollbar mt-10;
+       @apply flex flex-row gap-6 w-full overflow-scroll hide-scrollbar mt-10;
     }
 
     & ul {

@@ -49,6 +49,7 @@ const App = () => {
       const data = await res.json()
 
       if(data.Response === 'false') {
+        console.log(data.Error)
         setErrorMessage(data.Error || "Error fetching movies")
         setMovies([])
         return;
